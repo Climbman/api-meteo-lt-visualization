@@ -1,21 +1,37 @@
-var places = [];
-
-get('https://api.meteo.lt/v1/places', set_places);
-
-setTimeout(function(){ console.log(places); }, 3000);
-
+document.onload = function() {
+    document.getElementById('search-field').onkeyup = function() {
+        get('srv.php?cmd=1&search_phrase=' + this.value, set_places);
+    };
+};
 
 
 function set_places(response_obj) {
-    var places_array;
+    var response;
+    var places;
+    var option;
     
-    places_array = JSON.parse(response_obj.text);
+    var container = document.getElementById('places');
     
-    if (!places_array) {
+    response = JSON.parse(response_obj.text);
+    
+    if (!response) {
         return false;
     }
     
-    places = places_array;
+    if (response.error === true) {
+        alert(response.error_name);
+        return false;
+    }
+    
+    places = response.matches;
+    
+    
+    
+    for (var i = 0; i < places.length; i++) {
+        option = createElement('option');
+        option.setAtrribute('value', places[i]);
+        container.appendChild(option);
+    }
 }
 
 function get(url, callback) {
