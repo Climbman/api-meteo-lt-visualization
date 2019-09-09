@@ -1,8 +1,11 @@
-document.onload = function() {
-    document.getElementById('search-field').onkeyup = function() {
-        get('srv.php?cmd=1&search_phrase=' + this.value, set_places);
-    };
+window.onload = function() {
+    document.getElementById('search-field').addEventListener('keyup', suggest);
+
 };
+
+function suggest(event) {
+    get('srv.php?cmd=1&search_phrase=' + event.target.value, set_places);
+}
 
 
 function set_places(response_obj) {
@@ -12,7 +15,7 @@ function set_places(response_obj) {
     
     var container = document.getElementById('places');
     
-    response = JSON.parse(response_obj.text);
+    response = JSON.parse(response_obj.responseText);
     
     if (!response) {
         return false;
@@ -26,10 +29,10 @@ function set_places(response_obj) {
     places = response.matches;
     
     
-    
+    container.innerHTML = '';
     for (var i = 0; i < places.length; i++) {
-        option = createElement('option');
-        option.setAtrribute('value', places[i]);
+        option = document.createElement('option');
+        option.setAttribute('value', places[i]);
         container.appendChild(option);
     }
 }
