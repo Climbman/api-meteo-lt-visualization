@@ -1,10 +1,25 @@
 window.onload = function() {
-    document.getElementById('search-field').addEventListener('keyup', suggest);
-
+    //adding event listeners
+    document.getElementById('fld_search').addEventListener('keyup', suggest);
+    document.getElementById('fld_search').addEventListener('change', unfocus_input);
+    
+    //runing js to load data
+    
 };
+
+function refresh_graph() {
+    
+}
+
+function unfocus_input(event) {
+    event.target.blur();
+}
 
 function suggest(event) {
     get('srv.php?cmd=1&search_phrase=' + event.target.value, set_places);
+}
+
+function set_graph_data() {
 }
 
 
