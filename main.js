@@ -2,13 +2,17 @@ window.onload = function() {
     //adding event listeners
     document.getElementById('fld_search').addEventListener('keyup', suggest);
     document.getElementById('fld_search').addEventListener('change', unfocus_input);
+    document.getElementById('btn_confirm').addEventListener('click', refresh_graph)
     
     //runing js to load data
     
 };
 
 function refresh_graph() {
-    
+    var place = document.getElementById('fld_search').value;
+    get('srv.php?cmd=2&place=' + place, function() {
+        console.log(this.responseText);
+    });
 }
 
 function unfocus_input(event) {
