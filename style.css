@@ -8,3 +8,8 @@ body {
     margin: auto;
     background-color: #fff;
 }
+
+.graph-canvas {
+    width: 500px;
+    height: 500px;
+}

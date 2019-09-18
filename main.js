@@ -9,6 +9,12 @@ let sea_pressure;
 let precipitation;
 let condition_code;
 
+let ctx; //graph 2d context
+let graph;
+
+//graph settings:
+
+
 
 
 //adding event listeners
@@ -18,6 +24,8 @@ window.onload = function() {
     document.getElementById('btn_confirm').addEventListener('click', refresh_graph);
     
     //runing js to load data
+    ctx = document.getElementById('graph').getContext('2d');
+    graph = document.getElementById('graph');
     
 };
 
@@ -30,15 +38,15 @@ function refresh_graph() {
 
 function set_graph_data(response) {
     //unset previous values
-    dates = null;
-    temperature = null;
-    wind_speed = null;
-    wind_gust = null;
-    wind_direction = null;
-    cloud_cover = null;
-    sea_pressure = null;
-    precipitation = null;
-    condition_code = null;
+    dates = [];
+    temperature = [];
+    wind_speed = [];
+    wind_gust = [];
+    wind_direction = [];
+    cloud_cover = [];
+    sea_pressure = [];
+    precipitation = [];
+    condition_code = [];
     
     //to array
     let data_points = JSON.parse(response.responseText);
@@ -48,16 +56,39 @@ function set_graph_data(response) {
     }
     
     for (let i = 0; i < data_points.length; i++) {
-        //
-        //
-        //
-        //
-        //
-        //
-        //
+        dates.push(data_points[i].forecastTimeUtc);
+        temperature.push(data_points[i].airTemperature);
+        wind_speed.push(data_points[i].windSpeed);
+        wind_gust.push(data_points[i].windGust);
+        wind_direction.push(data_points[i].windDirection);
+        cloud_cover.push(data_points[i].cloudCover);
+        sea_pressure.push(data_points[i].seaLevelPressure);
+        precipitation.push(data_points[i].totalPrecipitation);
+        condition_code.push(data_points[i].conditionCode);
     }
+    
+    //not working
+    ctx.clearRect(0, 0, graph.width, graph.height);
+    
+    graph = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Test',
+                fill: false,
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: 'rgb(255, 99, 132)',
+                lineTension: 0,
+                borderWidth: 2,
+                pointRadius: 2,
+                data: temperature
+            }]
+        },
+        options: {}
+    });
 }
-
 
 
 //functions for place suggestions
