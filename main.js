@@ -24,18 +24,21 @@ window.onload = function() {
     document.getElementById('btn_confirm').addEventListener('click', refresh_graph);
     
     //runing js to load data
-    ctx = document.getElementById('graph').getContext('2d');
     graph = document.getElementById('graph');
     
 };
 
 
-//functions for retrieving graph data
+/*
+ * functions for retrieving graph data
+ * START
+ */
 function refresh_graph() {
     let place = document.getElementById('fld_search').value;
     get('srv.php?cmd=2&place=' + place, set_graph_data);
 }
 
+//callback for refresh_graph() - data restructuring and painting new graph
 function set_graph_data(response) {
     //unset previous values
     dates = [];
@@ -67,8 +70,8 @@ function set_graph_data(response) {
         condition_code.push(data_points[i].conditionCode);
     }
     
-    //not working
-    ctx.clearRect(0, 0, graph.width, graph.height);
+    graph = reset_canvas(document.getElementById('graph'));
+    ctx = document.getElementById('graph').getContext('2d');
     
     graph = new Chart(ctx, {
         type: 'line',
@@ -89,6 +92,10 @@ function set_graph_data(response) {
         options: {}
     });
 }
+/*
+ * functions for retrieving graph data
+ * END
+ */
 
 
 //functions for place suggestions
@@ -137,7 +144,23 @@ function get(url, callback) {
     xhttp.send();
 }
 
+
 function unfocus_input(event) {
     console.log('unfocus');
     event.target.blur();
+}
+
+
+//Resseting canvas to avoid new graph generation on top of the old one
+function reset_canvas(canvas) {
+    let canvas_id = canvas.id;
+    let canvas_class = canvas.className;
+    let parent = canvas.parentNode;
+    
+    parent.removeChild(canvas);
+    canvas = document.createElement('canvas');
+    canvas.id = canvas_id;
+    canvas.className = canvas_class;
+    parent.appendChild(canvas);
+    return canvas;
 }
