@@ -8,12 +8,33 @@ let cloud_cover;
 let sea_pressure;
 let precipitation;
 let condition_code;
+let data_holder;
 
 let ctx; //graph 2d context
 let graph;
 
-//graph settings:
+//graph config
 
+let conf = {
+        parameterList: {
+            temp:    ['Temperature', 'airTemperature', 'line', 'rgba(224, 0, 0, 1.0)'],
+            wind_sp: ['Wind speed', 'windSpeed', 'line', 'rgba(224, 0, 0, 1.0)'],
+            wind_gs: ['Wind gusts', 'windGust', 'line', 'rgba(224, 0, 0, 1.0)'],
+            wind_dr: ['Wind direction', 'windDirection', 'bar', 'rgb(56, 147, 0, 1.0)'],
+            clouds:  ['Cloud cover', 'cloudCover', 'bar', 'rgb(56, 147, 0, 1.0)'],
+            press:   ['Pressure', 'seaLevelPressure', 'line', 'rgba(41, 130, 157, 1.0)'],
+            rain:    ['Precipitation', 'totalPrecipitation', 'bar', 'rgba(2, 103, 180, 1.0)']
+        },
+        graphSettings: {
+            airTemperature: ['line', 'rgba(224, 0, 0, 1.0)'],
+            windSpeed: ['line', 'rgba(0, 147, 86, 1.0)'],
+            windGust: ['line', 'rgba(0, 147, 86, 1.0)'],
+            windDirection: ['bar', 'rgb(56, 147, 0, 1.0)'],
+            cloudCover: ['bar', 'rgb(56, 147, 0, 1.0)'],
+            seaLevelPressure: ['line', 'rgba(41, 130, 157, 1.0)'],
+            totalPrecipitation: ['bar', 'rgba(2, 103, 180, 1.0)']
+        }
+};
 
 
 
@@ -25,6 +46,18 @@ window.onload = function() {
     
     //runing js to load data
     graph = document.getElementById('graph');
+    
+    //load meteorological parametet list
+    let met_list = document.getElementById('met_param');
+    let met_option;
+    
+    for (let name_arr of Object.values(conf.parameterList)){
+        met_option = document.createElement('option');
+        met_option.innerHTML = name_arr[0];
+        met_option.value = name_arr[1];
+        met_list.appendChild(met_option);
+        met_option = null;
+    }
     
 };
 
@@ -40,16 +73,15 @@ function refresh_graph() {
 
 //callback for refresh_graph() - data restructuring and painting new graph
 function set_graph_data(response) {
+    //get selected meteorological parameter
+    let selected_par = document.getElementById('met_param');
+    
+    let graph_type = conf.graphSettings[selected_par.value][0];
+    let graph_color = conf.graphSettings[selected_par.value][1];
+    
+    
     //unset previous values
-    dates = [];
-    temperature = [];
-    wind_speed = [];
-    wind_gust = [];
-    wind_direction = [];
-    cloud_cover = [];
-    sea_pressure = [];
-    precipitation = [];
-    condition_code = [];
+    data_holder = {};
     
     //to array
     let data_points = JSON.parse(response.responseText);
@@ -58,35 +90,36 @@ function set_graph_data(response) {
         return false;
     }
     
+    
     for (let i = 0; i < data_points.length; i++) {
-        dates.push(data_points[i].forecastTimeUtc);
-        temperature.push(data_points[i].airTemperature);
-        wind_speed.push(data_points[i].windSpeed);
-        wind_gust.push(data_points[i].windGust);
-        wind_direction.push(data_points[i].windDirection);
-        cloud_cover.push(data_points[i].cloudCover);
-        sea_pressure.push(data_points[i].seaLevelPressure);
-        precipitation.push(data_points[i].totalPrecipitation);
-        condition_code.push(data_points[i].conditionCode);
+        for (var key in data_points[i]) {
+            if (typeof data_holder[key] == 'undefined') {
+                data_holder[key] = [];
+            }
+            data_holder[key].push(data_points[i][key]);
+        }
     }
     
     graph = reset_canvas(document.getElementById('graph'));
     ctx = document.getElementById('graph').getContext('2d');
     
+    
+    
     graph = new Chart(ctx, {
-        type: 'line',
+        type: graph_type,
         data: {
-            labels: dates,
+            labels: data_holder['forecastTimeUtc'],
             datasets: [{
-                label: 'Test',
+                label: selected_par.options[selected_par.selectedIndex].innerHTML,
                 fill: false,
-                borderColor: 'rgb(255, 99, 132)',
-                pointBackgroundColor: 'rgb(255, 99, 132)',
-                pointBorderColor: 'rgb(255, 99, 132)',
+                borderColor: graph_color,
+                pointBackgroundColor: graph_color,
+                pointBorderColor: graph_color,
+                backgroundColor: graph_color,
                 lineTension: 0,
                 borderWidth: 2,
                 pointRadius: 2,
-                data: temperature
+                data: data_holder[selected_par.value]
             }]
         },
         options: {}
@@ -117,7 +150,7 @@ function set_places(response_obj) {
     }
     
     if (response.error === true) {
-        alert(response.error_name);
+        console.log(response.error_name);
         return false;
     }
     
