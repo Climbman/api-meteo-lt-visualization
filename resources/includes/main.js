@@ -63,21 +63,35 @@ window.onload = function() {
 
 
 /*
- * functions for retrieving graph data
- * START
+ ******** Project-specific functions
+*/
+
+/*
+ * Listener function for keyup in city field
+ */
+function suggest(event) {
+    get('srv.php?cmd=1&search_phrase=' + event.target.value, set_places);
+}
+
+/*
+ * Listener function for keyup in click
  */
 function refresh_graph() {
     let place = document.getElementById('fld_search').value;
     get('srv.php?cmd=2&place=' + place, set_graph_data);
 }
 
-//callback for refresh_graph() - data restructuring and painting new graph
+/*
+ * Callback for refresh_graph() - data restructuring and painting new graph
+ */
 function set_graph_data(response) {
     //get selected meteorological parameter
     let selected_par = document.getElementById('met_param');
     
     let graph_type = conf.graphSettings[selected_par.value][0];
     let graph_color = conf.graphSettings[selected_par.value][1];
+    
+    let dates = [];
     
     
     //unset previous values
@@ -100,15 +114,19 @@ function set_graph_data(response) {
         }
     }
     
+    for (var index in data_holder.forecastTimeUtc) {
+        dates.push(utc_to_local(data_holder.forecastTimeUtc[index]));
+    }
+    
+    
     graph = reset_canvas(document.getElementById('graph'));
     ctx = document.getElementById('graph').getContext('2d');
-    
     
     
     graph = new Chart(ctx, {
         type: graph_type,
         data: {
-            labels: data_holder['forecastTimeUtc'],
+            labels: dates,
             datasets: [{
                 label: selected_par.options[selected_par.selectedIndex].innerHTML,
                 fill: false,
@@ -125,17 +143,11 @@ function set_graph_data(response) {
         options: {}
     });
 }
+
 /*
- * functions for retrieving graph data
- * END
+ * Callback for suggest()
+ * generates autocompletion list based on search by keyword
  */
-
-
-//functions for place suggestions
-function suggest(event) {
-    get('srv.php?cmd=1&search_phrase=' + event.target.value, set_places);
-}
-
 function set_places(response_obj) {
     let response;
     let places;
@@ -162,38 +174,4 @@ function set_places(response_obj) {
         option.setAttribute('value', places[i]);
         container.appendChild(option);
     }
-}
-
-
-//General functions
-function get(url, callback) {
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            callback(this);
-        }
-    };
-    xhttp.open("GET", url, true);
-    xhttp.send();
-}
-
-
-function unfocus_input(event) {
-    console.log('unfocus');
-    event.target.blur();
-}
-
-
-//Resseting canvas to avoid new graph generation on top of the old one
-function reset_canvas(canvas) {
-    let canvas_id = canvas.id;
-    let canvas_class = canvas.className;
-    let parent = canvas.parentNode;
-    
-    parent.removeChild(canvas);
-    canvas = document.createElement('canvas');
-    canvas.id = canvas_id;
-    canvas.className = canvas_class;
-    parent.appendChild(canvas);
-    return canvas;
 }
