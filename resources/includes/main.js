@@ -93,6 +93,10 @@ function set_graph_data(response) {
     
     let dates = [];
     
+    let hour_seconds = 3600;
+    let date_diff;
+
+    let empty_count;
     
     //unset previous values
     data_holder = {};
@@ -104,14 +108,24 @@ function set_graph_data(response) {
         return false;
     }
     
-    
     for (let i = 0; i < data_points.length; i++) {
+        if (typeof data_points[i] != 'undefined' && typeof data_points[i + 1] != 'undefined') {
+            date_diff = new Date(data_points[i + 1]['forecastTimeUtc']) - new Date(data_points[i]['forecastTimeUtc']);
+            date_diff = date_diff / 1000;
+            if (date_diff > hour_seconds && date_diff % hour_seconds == 0) {
+                empty_count = date_diff / hour_seconds;
+            }
+        }
         for (var key in data_points[i]) {
             if (typeof data_holder[key] == 'undefined') {
                 data_holder[key] = [];
             }
             data_holder[key].push(data_points[i][key]);
+            for (let j = 0; j < empty_count; j++) {
+                data_holder[key].push(null);
+            }
         }
+        empty_count = 0;
     }
     
     for (var index in data_holder.forecastTimeUtc) {
@@ -134,6 +148,7 @@ function set_graph_data(response) {
                 pointBackgroundColor: graph_color,
                 pointBorderColor: graph_color,
                 backgroundColor: graph_color,
+                spanGaps: true,
                 lineTension: 0,
                 borderWidth: 2,
                 pointRadius: 2,
