@@ -1,12 +1,77 @@
 body {
-    background-color: #ccc;
+    background-color: #9999e6;
 }
 
 .content {
-    width: 90%;
+    width: 100%;
     max-width: 1000px;
     margin: auto;
     background-color: #fff;
+    
+    border: 2px solid #c299db;
+    box-shadow: 4px 4px #d699d6;
+    
+}
+
+.top-bar {
+    height: 50px;
+    background-color: #c299db;
+    border-bottom: 2px solid black;
+}
+
+.fld-search {
+    display: inline-block;
+    height: 40px;
+    padding-left: 5px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+}
+
+.met-param {
+    display: inline-block;
+    height: 40px;
+    box-sizing: content-box;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-confirm {
+    display: inline-block;
+    height: 40px;
+    width: 30px;
+    box-sizing: content-box;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-confirm:focus {
+    outline: 0;
+}
+
+.btn-confirm:hover {
+    background-color: #6699f2;
+}
+
+#wrp_datalist {
+    display: inline-block;
+}
+
+.canvas-container {
+    display: block;
+    width: auto;
+    max-width: 1000px;
+    height: 500px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.canvas-holder {
+    display: block;
+    width: 1000px;
+    height: 500px;
 }
 
 .graph-canvas {

@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="style.css">
         <style>
         </style>
@@ -11,19 +12,21 @@
     </head>
     <body>
         <div id="content" class="content">
-            <div id="top-bar">
-                <div id="search-bar">
-                    <input id="fld_search" type="text" list="places">
+            <div id="top_bar" class="top-bar">
+                <div id="search_bar" class="search-bar">
+                    <input id="fld_search" class="fld-search" type="text" list="places">
+                    <button id="btn_confirm" class="btn-confirm" type="button">OK</button>
                     <div id="wrp_datalist">
                         <datalist id="places"></datalist>
                     </div>
-                    <select id="met_param">
+                    <select id="met_param" class="met-param">
                     </select>
-                    <button id="btn_confirm" type="button">OK</button>
                 </div>
             </div>
-            <div id="canvas_holder">
-                <canvas id="graph" class="graph-canvas"></canvas>
+            <div id="canvas_conteiner" class="canvas-container">
+                <div id="canvas_holder" class="canvas-holder">
+                    <canvas id="graph" class="graph-canvas"></canvas>
+                </div>
             </div>
         </div>
     </body>

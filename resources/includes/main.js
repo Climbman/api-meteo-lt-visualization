@@ -29,8 +29,8 @@ let conf = {
             airTemperature: ['line', 'rgba(224, 0, 0, 1.0)'],
             windSpeed: ['line', 'rgba(0, 147, 86, 1.0)'],
             windGust: ['line', 'rgba(0, 147, 86, 1.0)'],
-            windDirection: ['bar', 'rgb(56, 147, 0, 1.0)'],
-            cloudCover: ['bar', 'rgb(56, 147, 0, 1.0)'],
+            windDirection: ['bar', 'rgba(56, 147, 0, 1.0)'],
+            cloudCover: ['bar', 'rgba(80, 80, 80, 1.0)'],
             seaLevelPressure: ['line', 'rgba(41, 130, 157, 1.0)'],
             totalPrecipitation: ['bar', 'rgba(2, 103, 180, 1.0)']
         }
@@ -43,6 +43,7 @@ window.onload = function() {
     document.getElementById('fld_search').addEventListener('keyup', suggest);
     document.getElementById('fld_search').addEventListener('change', unfocus_input);
     document.getElementById('btn_confirm').addEventListener('click', refresh_graph);
+    document.getElementById('met_param').addEventListener('change', refresh_graph);
     
     //runing js to load data
     graph = document.getElementById('graph');
