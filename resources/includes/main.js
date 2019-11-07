@@ -110,6 +110,8 @@ function set_graph_data(response) {
     }
     
     for (let i = 0; i < data_points.length; i++) {
+        
+        //calculate missing date points - gaps
         if (typeof data_points[i] != 'undefined' && typeof data_points[i + 1] != 'undefined') {
             date_diff = new Date(data_points[i + 1]['forecastTimeUtc']) - new Date(data_points[i]['forecastTimeUtc']);
             date_diff = date_diff / 1000;
@@ -117,20 +119,28 @@ function set_graph_data(response) {
                 empty_count = date_diff / hour_seconds;
             }
         }
+        
+        
         for (var key in data_points[i]) {
             if (typeof data_holder[key] == 'undefined') {
                 data_holder[key] = [];
             }
-            data_holder[key].push(data_points[i][key]);
+            
+            if (key === 'forecastTimeUtc') {
+                data_holder[key].push(utc_to_local(data_points[i][key]));
+            } else {
+                data_holder[key].push(data_points[i][key]);
+            }
+            
             for (let j = 0; j < empty_count; j++) {
-                data_holder[key].push(null);
+                if (key === 'forecastTimeUtc') {
+                    data_holder[key].push(date_add_sec(utc_to_local(data_points[i][key]), (j + 1) * hour_seconds));
+                } else {
+                    data_holder[key].push(null);
+                }
             }
         }
         empty_count = 0;
-    }
-    
-    for (var index in data_holder.forecastTimeUtc) {
-        dates.push(utc_to_local(data_holder.forecastTimeUtc[index]));
     }
     
     
@@ -141,7 +151,7 @@ function set_graph_data(response) {
     graph = new Chart(ctx, {
         type: graph_type,
         data: {
-            labels: dates,
+            labels: data_holder.forecastTimeUtc,
             datasets: [{
                 label: selected_par.options[selected_par.selectedIndex].innerHTML,
                 fill: false,

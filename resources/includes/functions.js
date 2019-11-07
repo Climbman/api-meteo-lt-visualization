@@ -13,6 +13,13 @@ function utc_to_local(date_str) {
     " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2));
 }
 
+function date_add_sec(date_str, seconds) {
+    let date = new Date(date_str);
+    date.setSeconds(date.getSeconds() + seconds);
+    return ("" + date.getFullYear() + "-" + ("0"+(date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) +
+            " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2));
+}
+
 function get(url, callback) {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
