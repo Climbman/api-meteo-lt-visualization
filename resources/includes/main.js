@@ -44,6 +44,7 @@ window.onload = function() {
     document.getElementById('fld_search').addEventListener('change', unfocus_input);
     document.getElementById('btn_confirm').addEventListener('click', refresh_graph);
     document.getElementById('met_param').addEventListener('change', refresh_graph);
+    document.getElementById('met_lenght').addEventListener('change', refresh_graph);
     
     //runing js to load data
     graph = document.getElementById('graph');
@@ -88,6 +89,7 @@ function refresh_graph() {
 function set_graph_data(response) {
     //get selected meteorological parameter
     let selected_par = document.getElementById('met_param');
+    let selected_lenght = document.getElementById('met_lenght');
     
     let graph_type = conf.graphSettings[selected_par.value][0];
     let graph_color = conf.graphSettings[selected_par.value][1];
@@ -118,6 +120,10 @@ function set_graph_data(response) {
             if (date_diff > hour_seconds && date_diff % hour_seconds == 0) {
                 empty_count = date_diff / hour_seconds;
             }
+        }
+        
+        if (i + empty_count > selected_lenght.value) {
+            break;
         }
         
         

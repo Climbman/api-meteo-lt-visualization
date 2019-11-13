@@ -23,6 +23,8 @@ body {
 .fld-search {
     display: inline-block;
     height: 40px;
+    width: 40%;
+    max-width: 130px;
     padding-left: 5px;
     background-color: #ffffff;
     border: none;
@@ -32,6 +34,19 @@ body {
 .met-param {
     display: inline-block;
     height: 40px;
+    width: 35%;
+    max-width: 115px;
+    box-sizing: content-box;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+}
+
+.met-lenght {
+    display: inline-block;
+    height: 40px;
+    width: 15%;
+    max-width: 50px;
     box-sizing: content-box;
     background-color: #ffffff;
     border: none;
@@ -41,7 +56,8 @@ body {
 .btn-confirm {
     display: inline-block;
     height: 40px;
-    width: 30px;
+    width: 10%;
+    max-width: 35px;
     box-sizing: content-box;
     background-color: white;
     border: none;
