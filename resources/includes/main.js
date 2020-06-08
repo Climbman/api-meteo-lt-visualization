@@ -43,8 +43,8 @@ window.onload = function() {
     document.getElementById('fld_search').addEventListener('keyup', suggest);
     document.getElementById('fld_search').addEventListener('change', unfocus_input);
     document.getElementById('btn_confirm').addEventListener('click', refresh_graph);
-    document.getElementById('met_param').addEventListener('change', refresh_graph);
-    document.getElementById('met_lenght').addEventListener('change', refresh_graph);
+    //document.getElementById('met_param').addEventListener('change', refresh_graph);
+    //document.getElementById('met_lenght').addEventListener('change', refresh_graph);
     
     //runing js to load data
     graph = document.getElementById('graph');

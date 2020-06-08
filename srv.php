@@ -1,5 +1,9 @@
 <?php
 
+$_config['max_file_age'] = 10800;
+$_config['cache_path'] = 'cache/';
+$_congig['api_address'] = 'https://api.meteo.lt/';
+
 if (!isset($_GET['cmd'])) {
     echo json_encode(['error' => true, 'error_name' => 'no cmd']);
     exit;
@@ -13,11 +17,11 @@ switch ($_GET['cmd']) {
             break;
         }
 
-        $url = 'https://api.meteo.lt/v1/places';
-        $file = 'cache/places.json';
+        $url = $_congig['api_address'] . 'v1/places';
+        $file = $_config['cache_path'] . 'places.json';
         
         $content = '';
-        if (!file_exists($file) || filemtime($file) + 600 < time()) {
+        if (!file_exists($file) || filemtime($file) + $_config['max_file_age'] < time()) {
             $handle = fopen($file, 'w');
             $content = file_get_contents($url);
 
@@ -61,8 +65,8 @@ switch ($_GET['cmd']) {
             break;
         }
         
-        $url = 'https://api.meteo.lt/v1/places/' . urlencode($_GET['place']) . '/forecasts/long-term';
-        $places_file = 'cache/places.json';
+        $url = $_congig['api_address'] . 'v1/places/' . urlencode($_GET['place']) . '/forecasts/long-term';
+        $places_file = $_config['cache_path'] . 'places.json';
         
         if (!$places_content = file_get_contents($places_file)) {
             echo json_encode(['error' => true, 'error_name' => 'no places file']);
@@ -85,16 +89,31 @@ switch ($_GET['cmd']) {
             echo json_encode(['error' => true, 'error_name' => 'illegal place']);
             break;
         }
-        
-        //TODO: implement cache if necessary
-        $forecast_content = file_get_contents($url);
 
-        if ($forecast_content == false) {
+        $file = 'cache/' . $_GET['place'] . '.json';
+
+        $content = null;
+        if (!file_exists($file) || filemtime($file) + $_config['max_file_age'] < time()) {
+            $handle = fopen($file, 'w');
+            $content = file_get_contents($url);
+
+            if (!$content) {
+                echo json_encode(['error' => true, 'error_name' => 'failed to fetch url contents']);
+                exit;
+            }
+
+            fwrite($handle, $content);
+            fclose($handle);
+        } else {
+            $content = file_get_contents($file);
+        }
+
+        if (!$content) {
             echo json_encode(['error' => true, 'error_name' => 'failed to fetch url contents']);
             exit;
         }
         
-        if (!$forecast_array = json_decode($forecast_content)) {
+        if (!$forecast_array = json_decode($content)) {
             echo json_encode(['error' => true, 'error_name' => 'failure parsing json']);
             break;
         }
@@ -108,4 +127,3 @@ switch ($_GET['cmd']) {
         echo json_encode(['error' => true, 'error_name' => 'unrecognized command']);
         break;
 }
-?>
