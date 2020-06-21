@@ -10,6 +10,8 @@ let precipitation;
 let condition_code;
 let data_holder;
 
+let places_data = [];
+
 let ctx; //graph 2d context
 let graph;
 
@@ -45,21 +47,9 @@ window.onload = function() {
     document.getElementById('btn_confirm').addEventListener('click', refresh_graph);
     //document.getElementById('met_param').addEventListener('change', refresh_graph);
     //document.getElementById('met_lenght').addEventListener('change', refresh_graph);
-    
-    //runing js to load data
-    graph = document.getElementById('graph');
-    
-    //load meteorological parametet list
-    let met_list = document.getElementById('met_param');
-    let met_option;
-    
-    for (let name_arr of Object.values(conf.parameterList)){
-        met_option = document.createElement('option');
-        met_option.innerHTML = name_arr[0];
-        met_option.value = name_arr[1];
-        met_list.appendChild(met_option);
-        met_option = null;
-    }
+
+
+    loadPage();
     
 };
 
@@ -68,11 +58,52 @@ window.onload = function() {
  ******** Project-specific functions
 */
 
+function loadPage() {
+    //runing js to load data
+    graph = document.getElementById('graph');
+
+    //load meteorological parametet list
+    let met_list = document.getElementById('met_param');
+    let met_option;
+
+    for (let name_arr of Object.values(conf.parameterList)){
+        met_option = document.createElement('option');
+        met_option.innerHTML = name_arr[0];
+        met_option.value = name_arr[1];
+        met_list.appendChild(met_option);
+        met_option = null;
+    }
+
+    get('srv.php?cmd=1', function (response) {
+        let parsed = JSON.parse(response.responseText);
+        places_data = parsed.places;
+        document.getElementById('load_overlay').style.display = 'none';
+
+    })
+}
+
 /*
  * Listener function for keyup in city field
  */
 function suggest(event) {
-    get('srv.php?cmd=1&search_phrase=' + event.target.value, set_places);
+    let search_text = event.target.value;
+    let option;
+    let container = document.getElementById('places');
+
+    if (search_text.length < 3) {
+        return;
+    }
+
+    container.innerHTML = '';
+    for (place_code in places_data) {
+
+        if (places_data[place_code].toUpperCase().includes(search_text.toUpperCase())) {
+            option = document.createElement('option');
+            option.value = place_code;
+            //option.innerHTML = places_data[place_code];
+            container.appendChild(option);
+        }
+    }
 }
 
 /*
@@ -174,36 +205,4 @@ function set_graph_data(response) {
         },
         options: {}
     });
-}
-
-/*
- * Callback for suggest()
- * generates autocompletion list based on search by keyword
- */
-function set_places(response_obj) {
-    let response;
-    let places;
-    let option;
-    
-    let container = document.getElementById('places');
-    
-    response = JSON.parse(response_obj.responseText);
-    
-    if (!response) {
-        return false;
-    }
-    
-    if (response.error === true) {
-        console.log(response.error_name);
-        return false;
-    }
-    
-    places = response.matches;
-    
-    container.innerHTML = '';
-    for (let i = 0; i < places.length; i++) {
-        option = document.createElement('option');
-        option.setAttribute('value', places[i]);
-        container.appendChild(option);
-    }
 }

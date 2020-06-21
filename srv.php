@@ -12,10 +12,6 @@ if (!isset($_GET['cmd'])) {
 switch ($_GET['cmd']) {
     //place name retrieval and search
     case '1':
-        if (!isset($_GET['search_phrase'])) {
-            echo json_encode(['error' => true, 'error_name' => 'no search phrase']);
-            break;
-        }
 
         $url = $_congig['api_address'] . 'v1/places';
         $file = $_config['cache_path'] . 'places.json';
@@ -42,19 +38,12 @@ switch ($_GET['cmd']) {
             break;
         }
 
-        $word = strtolower($_GET['search_phrase']);
-        if (trim($word) == '') {
-            $word = 'abc';
-        }
-        $len = strlen($word);
-        $matches = array();
+        $places = [];
         foreach ($places_array as $obj) {
-            if (stristr($word, substr($obj->code, 0, $len))) {
-                $matches[] = $obj->code;
-            }
+                $matches[$obj->code] = $obj->name;
         }
 
-        echo json_encode(['error' => false, 'matches' => $matches]);
+        echo json_encode(['error' => false, 'places' => $matches]);
         break;
     case '2':
         $places_array = '';
