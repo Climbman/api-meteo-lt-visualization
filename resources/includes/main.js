@@ -90,20 +90,32 @@ function suggest(event) {
     let option;
     let container = document.getElementById('places');
 
+    let counter = 0;
+
     if (search_text.length < 3) {
+        container.style.display = 'none';
         return;
     }
 
     container.innerHTML = '';
     for (place_code in places_data) {
 
+        if (counter > 20) {
+            break;
+        }
+
         if (places_data[place_code].toUpperCase().includes(search_text.toUpperCase())) {
-            option = document.createElement('option');
+            option = document.createElement('div');
+
+            option.className = 'search-option';
+
+            option.innerHTML = places_data[place_code];
             option.value = place_code;
-            //option.innerHTML = places_data[place_code];
             container.appendChild(option);
         }
     }
+    container.style.display = 'block';
+    counter++;
 }
 
 /*

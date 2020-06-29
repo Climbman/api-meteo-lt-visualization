@@ -10,6 +10,13 @@ body {
     background-color: rgba(0,0,0,0.5);
 }
 
+#places {
+    display: none;
+    position: absolute;
+    background-color: #6699f2;
+    max-width: 150px;
+}
+
 .content {
     width: 100%;
     max-width: 1000px;
@@ -80,8 +87,13 @@ body {
     background-color: #6699f2;
 }
 
-#wrp_datalist {
-    display: inline-block;
+.search-option {
+    margin: 5px 5px 5px 5px;
+    z-index: 99;
+}
+
+.search-option:hover {
+    background-color: #c299db;
 }
 
 .canvas-container {
