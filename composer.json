@@ -1,0 +1,17 @@
+{
+    "name": "climbman/api-meteo-lt-visualization",
+    "description": "An interface for api.meteo.lt visualization",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Climbman",
+            "email": "example@example.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.4",
+        "symfony/http-foundation": "^5.2"
+    }
+}
