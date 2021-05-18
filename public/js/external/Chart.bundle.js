@@ -6916,7 +6916,7 @@ var platform_dom$2 = {
 		// https://github.com/chartjs/Chart.js/issues/2807
 		var context = item && item.getContext && item.getContext('2d');
 
-		// Load platform resources on first chart creation, to make possible to change
+		// Load platform js on first chart creation, to make possible to change
 		// platform options after importing the library (e.g. `disableCSSInjection`).
 		this._ensureLoaded();
 
@@ -7049,7 +7049,7 @@ var platform = helpers$1.extend({
 	acquireContext: function() {},
 
 	/**
-	 * Called at chart destruction time, releases any resources associated to the context
+	 * Called at chart destruction time, releases any js associated to the context
 	 * previously returned by the acquireContext() method.
 	 * @param {CanvasRenderingContext2D} context - The context2d instance
 	 * @returns {boolean} true if the method succeeded, else false
