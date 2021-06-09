@@ -12,4 +12,5 @@ $config = [
 ];
 
 (new \Climbman\ApiMeteoVisualization\Controller($config))->handleRequest();
+
 exit;

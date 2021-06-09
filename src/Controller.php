@@ -27,7 +27,7 @@ class Controller
                 $url = $_config['api_address'] . 'v1/places';
                 $file = $_config['cache_path'] . 'places.json';
 
-                $content = getContentFromCacheOrRemote($file, $_config, $url);
+                $content = $this->getContentFromCacheOrRemote($file, $_config, $url);
 
                 if (!$places_array = json_decode($content)) {
                     echo json_encode(['error' => true, 'error_name' => 'failure parsing json']);
@@ -77,7 +77,7 @@ class Controller
 
                 $file = 'cache/' . $_GET['place'] . '.json';
 
-                $content = getContentFromCacheOrRemote($file, $_config, $url);
+                $content = $this->getContentFromCacheOrRemote($file, $_config, $url);
 
                 if (!$content) {
                     echo json_encode(['error' => true, 'error_name' => 'failed to fetch url contents']);
