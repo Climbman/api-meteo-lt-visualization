@@ -13,12 +13,7 @@ class Controller
         $this->config = $config;
     }
 
-    public function handleRequest(): void
-    {
-
-    }
-
-    private function handleGetRequest($_config): void
+    private function handleRequest($_config): void
     {
         switch ($_GET['cmd']) {
             //place name retrieval and search
